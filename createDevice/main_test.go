@@ -2,6 +2,7 @@ package main
 
 import (
 	"AWS_challenge1/createDevice/data"
+	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -22,10 +23,28 @@ func TestHandler(t *testing.T) {
 		expectedErr    error
 		expectedOutput data.Output
 	}{
-		{"ok",data.Input{},nil,nil,nil,data.Output{"device added successfully"}},
-		{"marshalMethodErr",data.Input{},errors.New(""),nil,errors.New("server error"),data.Output{}},
-		{"putItemErr",data.Input{},nil,errors.New(""),errors.New("server error"),data.Output{}},
+		{"ok", data.Input{}, nil, nil, nil, data.Output{"device added successfully"}},
+		{"marshalMethodErr", data.Input{}, errors.New(""), nil, errors.New("server error"), data.Output{}},
+		{"putItemErr", data.Input{}, nil, errors.New(""), errors.New("server error"), data.Output{}},
 	}
-	_ = tests
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+
+			core := Core{
+
+			}
+
+
+			output, err := core.Handler(context.TODO(), test.input)
+
+
+			if err != nil {
+				assert.Nil(t, test.expectedErr)
+			} else {
+				assert.EqualError(t, err, test.expectedErr.Error())
+			}
+			assert.Equal(t, test.expectedOutput.Message, output.Message)
+		})
+	}
 
 }
