@@ -16,7 +16,7 @@ import (
 //Core is struct for handle request, dynamoDB client and marshalMap are dependency injection
 type Core struct {
 	db         dynamodbiface.DynamoDBAPI
-	marshalMap func(in interface{}) (map[string]*dynamodb.AttributeValue, error)
+	unMarshalMap func (m map[string]*dynamodb.AttributeValue, out interface{}) error
 }
 
 //Handler is a lambda for handle post request from api Getway
@@ -38,7 +38,7 @@ func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, err
 		return data.Output{}, errors.New("device not found")
 	}
 	var device data.Output
-	err = dynamodbattribute.UnmarshalMap(result.Item, &device)
+	err = d.unMarshalMap(result.Item, &device)
 	if err != nil {
 		return data.Output{}, errors.New("server error")
 	}
@@ -56,7 +56,8 @@ func main() {
 	dynaClient := dynamodb.New(awsSession)
 	core := Core{
 		db:         dynaClient,
-		marshalMap: dynamodbattribute.MarshalMap,
+		unMarshalMap: dynamodbattribute.UnmarshalMap,
 	}
 	lambda.Start(core.Handler)
 }
+
