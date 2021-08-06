@@ -23,7 +23,7 @@ type Core struct {
 func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, error) {
 	key := map[string]*dynamodb.AttributeValue{
 		"Id": {
-			N: aws.String(entity.Id),
+			S: aws.String(entity.Id),
 		},
 	}
 	getItemInput := &dynamodb.GetItemInput{
