@@ -21,19 +21,18 @@ type Core struct {
 
 //Handler is a lambda for handle post request from api Getway
 func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, error) {
-	av, err := d.marshalMap(entity)
+	device, err := d.marshalMap(entity)
 	if err != nil {
 		return data.Output{}, errors.New("server error")
 	}
 	input := &dynamodb.PutItemInput{
-		Item:      av,
+		Item:      device,
 		TableName: aws.String(os.Getenv("TABLE_NAME")),
 	}
 	_, err = d.db.PutItem(input)
 	if err != nil {
 		return data.Output{}, errors.New("server error")
 	}
-
 	return data.Output{Message: "device added successfully"}, nil
 }
 func main() {
