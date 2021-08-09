@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"log"
 	"os"
 )
 
@@ -32,14 +33,17 @@ func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, err
 	}
 	result, err := d.db.GetItem(getItemInput)
 	if err != nil {
+		log.Println(err)
 		return data.Output{}, errors.New("server error")
 	}
 	if result.Item == nil {
+		log.Println(err)
 		return data.Output{}, errors.New("device not found")
 	}
 	var device data.Output
 	err = d.unMarshalMap(result.Item, &device)
 	if err != nil {
+		log.Println(err)
 		return data.Output{}, errors.New("server error")
 	}
 	return device, nil
@@ -51,6 +55,7 @@ func main() {
 		Region: aws.String(region)},
 	)
 	if err != nil {
+		log.Println(err)
 		return
 	}
 	dynaClient := dynamodb.New(awsSession)

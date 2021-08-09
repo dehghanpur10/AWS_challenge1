@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"log"
 	"os"
 )
 
@@ -23,6 +24,7 @@ type Core struct {
 func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, error) {
 	device, err := d.marshalMap(entity)
 	if err != nil {
+		log.Println(err)
 		return data.Output{}, errors.New("server error")
 	}
 	input := &dynamodb.PutItemInput{
@@ -31,6 +33,8 @@ func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, err
 	}
 	_, err = d.db.PutItem(input)
 	if err != nil {
+		log.Println(err)
+
 		return data.Output{}, errors.New("server error")
 	}
 	return data.Output{Message: "device added successfully"}, nil
@@ -41,6 +45,7 @@ func main() {
 		Region: aws.String(region)},
 	)
 	if err != nil {
+		log.Println(err)
 		return
 	}
 	dynaClient := dynamodb.New(awsSession)
