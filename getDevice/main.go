@@ -22,7 +22,7 @@ type Core struct {
 //Handler is a lambda for handle post request from api Getway
 func (d *Core) Handler(ctx context.Context, entity data.Input) (data.Output, error) {
 	key := map[string]*dynamodb.AttributeValue{
-		"Id": {
+		"id": {
 			S: aws.String(entity.Id),
 		},
 	}
