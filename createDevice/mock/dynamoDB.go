@@ -1,3 +1,4 @@
+//Package mock for mocking dependency
 package mock
 
 import (
@@ -13,7 +14,7 @@ type dynamoMock struct {
 func (s dynamoMock) PutItem(i *dynamodb.PutItemInput) (*dynamodb.PutItemOutput, error) {
 	return &dynamodb.PutItemOutput{}, s.ErrReturn
 }
-
+//NewMockDynamo is func that return mock dynamoDB
 func NewMockDynamo(err error) *dynamoMock {
 	return &dynamoMock{ErrReturn: err}
 }

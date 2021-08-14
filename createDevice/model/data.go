@@ -1,4 +1,4 @@
-// Package model model is package for present input and output model
+// Package model  is package for present input and output model
 package model
 
 //Output is model for sending model to api getway
