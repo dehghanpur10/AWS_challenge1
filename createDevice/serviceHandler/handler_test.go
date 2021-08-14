@@ -7,16 +7,10 @@ import (
 	"errors"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/stretchr/testify/assert"
-	"os"
 	"testing"
 )
 
 func TestHandler(t *testing.T) {
-	err := os.Setenv("TABLE_NAME", "dummy")
-	assert.NoError(t, err)
-	err = os.Setenv("AWS_REGION", "dummy")
-	assert.NoError(t, err)
-
 	tests := []struct {
 		name           string
 		input          model.Input
