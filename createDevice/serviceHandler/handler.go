@@ -25,7 +25,7 @@ func NewCore(db dynamodbiface.DynamoDBAPI, marshal marshalType) *Core {
 //Core is struct for handle request, dynamoDB client and marshalMap are dependency injection
 type Core struct {
 	db         dynamodbiface.DynamoDBAPI
-	marshalMap func(in interface{}) (map[string]*dynamodb.AttributeValue, error)
+	marshalMap marshalType
 }
 
 //Handler is a lambda for handle post request from api Getway
