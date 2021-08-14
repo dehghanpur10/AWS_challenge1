@@ -26,10 +26,7 @@ func TestHandler(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			dyMock := mock.NewMockDynamo(test.putItemErr)
 			marshalMock := mock.MarshalMock(test.marshalErr)
-			core := Core{
-				db:         dyMock,
-				marshalMap: marshalType(marshalMock),
-			}
+			core := NewCore(dyMock, marshalType(marshalMock))
 
 			output, err := core.Handler(context.TODO(), test.input)
 
