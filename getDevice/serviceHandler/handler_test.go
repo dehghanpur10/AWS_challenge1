@@ -7,7 +7,6 @@ import (
 	"errors"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -20,18 +19,21 @@ func TestHandler(t *testing.T) {
 	tests := []struct {
 		name           string
 		getItemErr     error
-		item  map[string]*dynamodb.AttributeValue
+		unMarshalErr   error
+		item           map[string]*dynamodb.AttributeValue
 		expectedOutput model.Output
 		expectedErr    error
 	}{
-		{name: "ok", item:  item, expectedOutput: model.Output{Name: "mohammad"}},
+		{name: "ok", item: item, expectedOutput: model.Output{Name: "mohammad"}},
 		{name: "getItemErr", getItemErr: errors.New(""), expectedErr: errors.New("server error")},
 		{name: "not found", expectedErr: errors.New("device not found")},
+		{name: "unMarshalErr", item: item, unMarshalErr: errors.New(""), expectedErr: errors.New("server error")},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			dyMock := mock.NewMockDynamo(test.item, test.getItemErr)
-			core := NewCore(dyMock, dynamodbattribute.UnmarshalMap)
+			unmarshalMock := mock.UnMarshalMock(test.unMarshalErr)
+			core := NewCore(dyMock, unMarshalType(unmarshalMock))
 
 			output, err := core.Handler(context.TODO(), model.Input{})
 
@@ -40,7 +42,7 @@ func TestHandler(t *testing.T) {
 			} else {
 				assert.EqualError(t, err, test.expectedErr.Error())
 			}
-			assert.Equal(t, test.expectedOutput.Name, output.Name)
+			assert.Equal(t, test.expectedOutput, output)
 		})
 	}
 }
