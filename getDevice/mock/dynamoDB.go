@@ -8,17 +8,20 @@ import (
 
 type dynamoMock struct {
 	dynamodbiface.DynamoDBAPI
-	ErrReturn    error
-	resultReturn *dynamodb.GetItemOutput
+	ErrReturn error
+	Item      map[string]*dynamodb.AttributeValue
 }
 
 func (s dynamoMock) GetItem(*dynamodb.GetItemInput) (*dynamodb.GetItemOutput, error) {
-	return s.resultReturn, s.ErrReturn
+	return &dynamodb.GetItemOutput{
+		Item: s.Item,
+	}, s.ErrReturn
 }
+
 //NewMockDynamo is func that return mock dynamoDB
-func NewMockDynamo(result *dynamodb.GetItemOutput, err error) *dynamoMock {
+func NewMockDynamo(item map[string]*dynamodb.AttributeValue, err error) *dynamoMock {
 	return &dynamoMock{
-		ErrReturn:    err,
-		resultReturn: result,
+		ErrReturn: err,
+		Item:      item,
 	}
 }

@@ -1,8 +1,8 @@
 package serviceHandler
 
 import (
-	"AWS_challenge1/createDevice/model"
 	"AWS_challenge1/createDevice/mock"
+	"AWS_challenge1/createDevice/model"
 	"context"
 	"errors"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -26,8 +26,8 @@ func TestHandler(t *testing.T) {
 		expectedOutput model.Output
 	}{
 		{name: "ok", expectedOutput: model.Output{Message: "device added successfully"}},
-		{name: "marshalMethodErr", marshalErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: model.Output{}},
-		{name: "putItemErr", putItemErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: model.Output{}},
+		{name: "marshalMethodErr", marshalErr: errors.New(""), expectedErr: errors.New("server error")},
+		{name: "putItemErr", putItemErr: errors.New(""), expectedErr: errors.New("server error")},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
