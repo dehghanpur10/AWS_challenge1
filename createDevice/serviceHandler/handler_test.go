@@ -1,11 +1,11 @@
-package main
+package serviceHandler
 
 import (
-	"AWS_challenge1/createDevice/data"
+	"AWS_challenge1/createDevice/model"
+	"AWS_challenge1/createDevice/mock"
 	"context"
 	"errors"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -19,19 +19,19 @@ func TestHandler(t *testing.T) {
 
 	tests := []struct {
 		name           string
-		input          data.Input
+		input          model.Input
 		marshalErr     error
 		putItemErr     error
 		expectedErr    error
-		expectedOutput data.Output
+		expectedOutput model.Output
 	}{
-		{name: "ok", expectedOutput: data.Output{Message: "device added successfully"}},
-		{name: "marshalMethodErr", marshalErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: data.Output{}},
-		{name: "putItemErr", putItemErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: data.Output{}},
+		{name: "ok", expectedOutput: model.Output{Message: "device added successfully"}},
+		{name: "marshalMethodErr", marshalErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: model.Output{}},
+		{name: "putItemErr", putItemErr: errors.New(""), expectedErr: errors.New("server error"), expectedOutput: model.Output{}},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			dyMock := newMockDynamo(test.putItemErr)
+			dyMock := mock.NewMockDynamo(test.putItemErr)
 			marshalMock := func(in interface{}) (map[string]*dynamodb.AttributeValue, error) {
 				return nil, test.marshalErr
 			}
@@ -51,17 +51,4 @@ func TestHandler(t *testing.T) {
 		})
 	}
 
-}
-
-type dynamoMock struct {
-	dynamodbiface.DynamoDBAPI
-	ErrReturn error
-}
-
-func (s dynamoMock) PutItem(i *dynamodb.PutItemInput) (*dynamodb.PutItemOutput, error) {
-	return &dynamodb.PutItemOutput{}, s.ErrReturn
-}
-
-func newMockDynamo(err error) dynamoMock {
-	return dynamoMock{ErrReturn: err}
 }

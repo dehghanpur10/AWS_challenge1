@@ -1,12 +1,12 @@
-// Package data data is package for present input and output model
-package data
+// Package model model is package for present input and output model
+package model
 
-//Output is model for sending data to api getway
+//Output is model for sending model to api getway
 type Output struct {
 	Message string `json:"message"`
 }
 
-//Input is model for incoming data from api getway
+//Input is model for incoming model from api getway
 type Input struct {
 	Id          string `json:"id"`
 	DeviceModel string `json:"deviceModel"`
