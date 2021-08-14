@@ -10,12 +10,17 @@ import (
 	"log"
 	"os"
 )
+
 //unMarshalType is type for unMarshal function
 type unMarshalType func(m map[string]*dynamodb.AttributeValue, out interface{}) error
 
+//CoreInterface is interface for core
+type CoreInterface interface {
+	Handler(ctx context.Context, entity model.Input) (model.Output, error)
+}
 
 //NewCore is function for create new core for handler lambada
-func NewCore(db dynamodbiface.DynamoDBAPI, unMarshal unMarshalType) *Core {
+func NewCore(db dynamodbiface.DynamoDBAPI, unMarshal unMarshalType) CoreInterface {
 	return &Core{
 		db:           db,
 		unMarshalMap: unMarshal,
@@ -57,4 +62,3 @@ func (d *Core) Handler(ctx context.Context, entity model.Input) (model.Output, e
 	return device, nil
 
 }
-

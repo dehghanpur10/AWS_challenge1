@@ -14,8 +14,13 @@ import (
 //marshalType is type for marshal function
 type marshalType func(in interface{}) (map[string]*dynamodb.AttributeValue, error)
 
+//CoreInterface is interface for core
+type CoreInterface interface {
+	Handler(ctx context.Context, entity model.Input) (model.Output, error)
+}
+
 //NewCore is function for create new core for handler lambada
-func NewCore(db dynamodbiface.DynamoDBAPI, marshal marshalType) *Core {
+func NewCore(db dynamodbiface.DynamoDBAPI, marshal marshalType) CoreInterface {
 	return &Core{
 		db:         db,
 		marshalMap: marshal,
