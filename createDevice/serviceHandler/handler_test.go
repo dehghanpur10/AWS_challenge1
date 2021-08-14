@@ -5,7 +5,6 @@ import (
 	"AWS_challenge1/createDevice/model"
 	"context"
 	"errors"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -26,12 +25,10 @@ func TestHandler(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			dyMock := mock.NewMockDynamo(test.putItemErr)
-			marshalMock := func(in interface{}) (map[string]*dynamodb.AttributeValue, error) {
-				return nil, test.marshalErr
-			}
+			marshalMock := mock.MarshalMock(test.marshalErr)
 			core := Core{
 				db:         dyMock,
-				marshalMap: marshalMock,
+				marshalMap: marshalType(marshalMock),
 			}
 
 			output, err := core.Handler(context.TODO(), test.input)
