@@ -6,7 +6,12 @@
   - **serviceHandler** : this section contains lambda handler, and it tests file.
   - **main.go** : this go files run lambda function.
   
-  
+## environment variable
+>This environment variable must be set in lambda configuration
+  - **TABLE_NAME** : name of dynamoDB table that data save to it
+  - **ACCESS_TOKEN** : Access_token_id for access to aws service
+  - **SECRET_KEY** : Secret_key_access for access to aws service
+
 ## create device
   >This lambda get device info form *apiGetway* and add new device to *dynamoDB* and returen response to *apiGetway* again.
   
