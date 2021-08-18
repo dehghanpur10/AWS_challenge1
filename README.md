@@ -1,5 +1,8 @@
 # AWS_challenge_1
 
+## api
+> URL of api ==> [https://849g0lddal.execute-api.us-west-2.amazonaws.com/api/](https://849g0lddal.execute-api.us-west-2.amazonaws.com/api/)
+
 ## folder structure of each part 
   - **mock** : this section provides mock of dependency for testing.
   - **model** : this section provides input and output structure in lambda function.
